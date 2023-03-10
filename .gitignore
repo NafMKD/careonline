@@ -4,7 +4,7 @@ application/logs/*
 application/config/development/*
 application/config/testing/*
 application/config/production/*
-
+application/config/database.php 
 # Composer dependencies
 vendor/
 
