@@ -1,0 +1,13 @@
+# System/application folder
+application/cache/*
+application/logs/*
+application/config/development/*
+application/config/testing/*
+application/config/production/*
+
+# Composer dependencies
+vendor/
+
+# Other directories
+uploads/
+temp/
