@@ -95,7 +95,7 @@
     <input type="hidden" class="accept" value="<?php echo trans('accept') ?>">
     <input type="hidden" id="country_code" value="<?php echo strtolower(settings()->code); ?>">
     <!-- Global JS -->
-    <script src="<?php echo base_url() ?>assets/front/libs/jquery/dist/jquery.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/front/libs/jquery/dist/jquery.min.js" differ></script>
     <script src="<?php echo base_url() ?>assets/front/libs/popper.js/dist/umd/popper.min.js"></script>
     <script src="<?php echo base_url() ?>assets/front/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url() ?>assets/front/libs/owl-carousel/dist/js/owl.carousel.min.js"></script>

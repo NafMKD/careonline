@@ -237,7 +237,11 @@
                                          <a class="btn btn-sm btn-primary ml-auto" href="<?php echo base_url('staff/appointments') ?>"><i class="icon-speedometer"></i> <?php echo trans('dashboard') ?></a>
                                     <?php else: ?>
                                         <a class="btn btn-sm btn-light-secondary ml-auto text-<?php if (isset($page_title) && $page_title == 'Company Home'){echo 'white';} ?> text-xs-white" href="<?php echo base_url('login') ?>"><?php echo trans('sign-in') ?></a>
-                                        <a class="btn btn-sm btn-primary ml-auto" href="<?php echo base_url('register') ?>"><?php echo trans('get-started') ?></a>
+                                        <?php if($company->category == 2):?>
+                                            <a class="btn btn-sm btn-primary ml-auto" href="<?php echo base_url('auth/beauty_register') ?>"><?php echo trans('get-started') ?></a>
+                                        <?php else: ?>
+                                            <a class="btn btn-sm btn-primary ml-auto" href="<?php echo base_url('register') ?>"><?php echo trans('get-started') ?></a>
+                                        <?php endif ?>
                                     <?php endif ?>
                                 </li>
                             </ul>

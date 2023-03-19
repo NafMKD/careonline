@@ -672,4 +672,41 @@ class Auth extends Home_Controller
         $this->load->view('error_404');
     }
 
+    /** ADDED CODES */
+
+    // beauty category login
+    public function beauty_register()
+    {
+        $data = array();
+        $data['page_title'] = 'Register';
+        $data['page'] = 'Auth';
+        $data['menu'] = FALSE;
+        $data['main_content'] = $this->load->view('templates/style_1/beauty/beauty_register', $data, TRUE);
+        $this->load->view('index', $data);
+    }
+
+    // staff registration
+    public function staff_register()
+    {
+        $data = array();
+        $data['page_title'] = 'Register';
+        $data['page'] = 'Auth';
+        $data['menu'] = TRUE;
+        $data['companies'] = $this->common_model->get_all_beauty_business();
+        $data['main_content'] = $this->load->view('templates/style_1/beauty/register_staff', $data, TRUE);
+        $this->load->view('index', $data);
+    }
+
+    // customer register
+    public function customer_register()
+    {
+        $data = array();
+        $data['page_title'] = 'Register';
+        $data['page'] = 'Auth';
+        $data['menu'] = TRUE;
+        $data['companies'] = $this->common_model->get_all_beauty_business();
+        $data['main_content'] = $this->load->view('templates/style_1/beauty/register_customer', $data, TRUE);
+        $this->load->view('index', $data);
+    }
+
 }

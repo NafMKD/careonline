@@ -1432,4 +1432,70 @@ class Common_model extends CI_Model {
        
     }
 
+    /** ADDED CODES */
+
+    // get all beauty companies
+    public function get_all_beauty_business($status = null)
+    {
+        $this->db->select('b.*, n.name as country_name, n.currency_name, n.currency_symbol, n.currency_code, c.name as category_name');
+        $this->db->from('business b');
+        $this->db->where('b.category', 2);
+        if($status) $this->db->where('b.status', $status);
+        $this->db->join('country n', 'n.id = b.country', 'LEFT');
+        $this->db->join('categories c', 'c.id = b.category', 'LEFT');
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        $query = $query->result();
+        return $query;
+    }
+
+    // get staff list and/or number for business
+    public function get_total_business_staffs($type = 0,$business_id)
+    {
+        $this->db->select('*');
+        $this->db->from('staffs');
+        $this->db->where('business_id', $business_id);
+
+        if($type == 0) {
+            $query = $this->db->get();
+            $query = $query->num_rows();
+            return $query;
+        }else {
+            $query = $this->db->get();
+            $query = $query->result();
+            return $query;
+        }
+    }
+
+
+    // check business plan limit for staff number
+    public function check_plan_limit_staff_number($slug, $business_id, $total)
+    {
+        $business = $this->get_by_uid($business_id, 'business');
+        $user = $this->get_by_id($business->user_id, 'users');
+        $payment = $this->get_user_payment($business->user_id);
+        $package = $this->get_by_id($payment->package_id, 'package');
+        $feature = $this->common_model->get_feature($slug);
+
+        if ($user->user_type == 'trial') {
+            return TRUE;
+        }else{
+
+            $slug = $package->slug;
+            if (empty($feature) || empty($payment)) {
+                return FALSE;
+            } else {
+                if ($feature->$slug > 0) {
+                    if ($feature->$slug > $total) {
+                        return TRUE;
+                    }else{
+                        return FALSE;
+                    }
+                }else{
+                    return TRUE;
+                }
+            }
+        }
+    }
 }

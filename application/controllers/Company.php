@@ -500,4 +500,162 @@ class Company extends Home_Controller {
         }
     }
 
+    /** ADDED CODES */
+
+    public function add_staff_for_beauty()
+    {
+        /**
+         * 0 -> custom error message
+         * 1 -> success message (with url)
+         * 2 -> error message with email already exists message
+         * 3 -> error message with Recaptcha is required message
+         * else -> custom error message
+         */
+        if($_POST) {
+            //validate inputs
+            $this->form_validation->set_rules('name', trans('name'), 'required|max_length[100]');
+            $this->form_validation->set_rules('company_id', trans('company-name'), 'required');
+            $this->form_validation->set_rules('email', trans('email'), 'required|valid_email');
+            $this->form_validation->set_rules('phone', trans('phone'), 'required|min_length[8]|numeric');
+            $this->form_validation->set_rules('password', trans('password'), 'required|min_length[6]');
+
+            
+            if ($this->form_validation->run() === false) {
+                $validation = str_replace(['<p>', '</p>', "\n"],['','','<br/>'],validation_errors());
+                echo json_encode(array('st'=>0,'msg'=>$validation));
+                exit;
+            } else {
+                $mail =  strtolower(trim($this->input->post('email', true)));
+                $check_email = $this->auth_model->check_duplicate_email($mail);
+
+                if ($check_email){
+                    $msg = trans('email-exist');
+                    echo json_encode(array('st'=>0, 'msg' => $msg));
+                    exit();
+                } 
+
+                $password = hash_password($this->input->post('password'));
+                $company_data = $this->common_model->get_by_uid($this->input->post('company_id', true), 'business');
+
+                $data=array(
+                    'user_id' => $company_data->user_id,
+                    'business_id' => $this->input->post('company_id', true),
+                    'name' => $this->input->post('name', true),
+                    'slug' => str_slug($this->input->post('name', true)),
+                    'email' => $mail,
+                    'phone' => $this->input->post('phone', true),
+                    'status' => $this->input->post('status'),
+                    'image' => 'assets/images/no-photo.png',
+                    'thumb' => 'assets/images/no-photo-sm.png',
+                    'password' => $password,
+                    'created_at' => my_date_now(),
+                );
+                $data = $this->security->xss_clean($data);
+
+                $total = $this->common_model->get_total_business_staffs(0,$data['business_id']);
+                if( $this->common_model->check_plan_limit_staff_number('staffs',$data['business_id'], $total) == FALSE){
+                    echo json_encode(array('st'=>0,'msg'=>trans('reached-maximum-limit')));
+                    exit;
+                }
+                
+                $id = $this->admin_model->insert($data, 'staffs');
+
+                $user_data = array(
+                    'id' => $id,
+                    'name' => $data['name'],
+                    'role' => 'staff',
+                    'thumb' =>$data['thumb'],
+                    'email' => $data['email'],
+                    'logged_in' => true
+                );
+                $this->session->set_userdata($user_data);
+
+                $url = base_url('staff/appointments');
+
+                echo json_encode(array('st'=>1,'url'=>$url));
+                exit;
+            }
+            exit;
+        }
+    }
+
+    public function add_customer_for_beauty()
+    {
+        /**
+         * 0 -> custom error message
+         * 1 -> success message (with url)
+         * 2 -> error message with email already exists message
+         * 3 -> error message with Recaptcha is required message
+         * else -> custom error message
+         */
+        if($_POST) { 
+            //validate inputs
+            $this->form_validation->set_rules('name', trans('name'), 'required|max_length[100]');
+            $this->form_validation->set_rules('company_id', trans('company-name'), 'required');
+            $this->form_validation->set_rules('email', trans('email'), 'required|valid_email');
+            $this->form_validation->set_rules('phone', trans('phone'), 'required|min_length[8]|numeric');
+            $this->form_validation->set_rules('new_password', trans('password'), 'required|min_length[6]');
+
+            
+            if ($this->form_validation->run() === false) {
+                $validation = str_replace(['<p>', '</p>', "\n"],['','','<br/>'],validation_errors());
+                echo json_encode(array('st'=>0,'msg'=>$validation));
+                exit;
+            } else {
+
+                $company = $this->common_model->get_by_uid($this->input->post('company_id', true), 'business');
+                $mail =  strtolower(trim($this->input->post('email', true)));
+                $phone = '+'.$this->input->post('carrierCode', true).''.$this->input->post('phone', true);
+                $password = hash_password($this->input->post('new_password'));
+                
+                $data=array(
+                    'user_id' => $company->user_id,
+                    'business_id' => $company->uid,
+                    'name' => $this->input->post('name', true),
+                    'email' => $mail,
+                    'phone' => $phone,
+                    'status' => 1,
+                    'image' => 'assets/images/no-photo.png',
+                    'thumb' => 'assets/images/no-photo-sm.png',
+                    'password' => $password,
+                    'created_at' => user_date_now($company->time_zone),
+                );
+
+                $data = $this->security->xss_clean($data);
+
+                $check_phone = $this->auth_model->check_customer_phone($phone);
+                $check_email = $this->auth_model->check_duplicate_email($mail);
+
+                if ($check_phone){
+                    $msg = trans('phone-exist');
+                    echo json_encode(array('st'=>0, 'msg' => $msg));
+                    exit();
+                } 
+
+                if ($check_email){
+                    $msg = trans('email-exist');
+                    echo json_encode(array('st'=>0, 'msg' => $msg));
+                    exit();
+                } 
+
+            
+                $customer_id = $this->admin_model->insert($data, 'customers');
+                
+                $user_data = array(
+                    'id' => $customer_id,
+                    'name' => $data['name'],
+                    'role' => 'customer',
+                    'thumb' =>$data['thumb'],
+                    'email' => $data['email'],
+                    'logged_in' => true
+                );
+                $this->session->set_userdata($user_data);
+
+                $url = base_url('customer/appointments');
+
+                echo json_encode(array('st'=>1,'url'=>$url));
+                exit;
+            }
+        }
+    }
 }
