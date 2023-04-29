@@ -18,7 +18,7 @@
                     </div>
                 <?php else: ?>
                 <div class="mb-6 text-center">
-                    <h3 class="mb-0 custom-font"><?php echo trans('register-your-company') ?></h3>
+                    <h3 class="mb-0 custom-font"><?php echo trans('register-beauty-specialist') ?></h3>
                     <p class="mb-0"><?php echo trans('basic-information-you-can-add-more-later') ?></p>
                 </div>
 
@@ -33,23 +33,11 @@
                     action="<?php echo base_url('auth/register_user'); ?>">
 
                     <div class="row">
-                        
-                        <div class="col-12">
-                            <div class="form-group mb-1">
-                                <label class="mb-1"><?php echo trans('company-slug-restrict') ?> <span class="text-danger">*</span></label>
-                                <input type="text" required class="form-control form-control-sm slug_input" id="user-name" name="company_slug" placeholder="<?php echo base_url() ?><?php echo trans('company') ?>">
-                            </div>
-                            
-                            <div class="loader"></div>
-
-                            <p class="text-danger fs-14 mt-0 mb-0" id="name_exist" style="display: none;"><i class="icon-close"></i> <?php echo trans('name-is-already-taken') ?>.</p>
-                            <p class="text-success fs-14 mt-0 mb-0" id="name_available" style="display: none;"><i class="icon-check"></i> <?php echo trans('name-is-available') ?>.</p>
-                        </div>
 
                         <div class="col-12 mt-2">
                             <div class="form-group">
-                                <label class="mb-1"><?php echo trans('company-name') ?> <span class="text-danger">*</span></label>
-                                <input type="text" required class="form-control form-control-sm name_input" name="company_name" placeholder="<?php echo trans('name-of-your-company') ?>">
+                                <label class="mb-1"><?php echo trans('name') ?> <span class="text-danger">*</span></label>
+                                <input type="text" required class="form-control form-control-sm name_input" name="company_name" placeholder="<?php echo trans('your-full-name') ?>">
                             </div>
                         </div>
 
@@ -131,7 +119,7 @@
                             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>"
                                 value="<?php echo $this->security->get_csrf_hash();?>">
                             <button type="submit"
-                                class="btn btn-primary btn-block mt-4 mb-0 register_button" disabled="disabled"><?php echo trans('register') ?></button>
+                                class="btn btn-primary btn-block mt-4 mb-0 register_button" disabled><?php echo trans('register') ?></button>
                         </div>
                     </div>
 

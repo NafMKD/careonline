@@ -175,7 +175,14 @@
                                          
                                     <?php else: ?>
                                         <a class="btn btn-sm btn-light ml-auto" href="<?php echo base_url('login') ?>"><?php echo trans('sign-in') ?></a>
-                                        <a class="btn btn-sm btn-primary ml-auto" href="<?php echo base_url('register') ?>"><?php echo trans('get-started') ?></a>
+                                        <li class="nav-item dropdown">
+                                            <a class="btn btn-sm btn-primary ml-auto" data-toggle="dropdown" href="javascript:void(0);"><?php echo trans('get-started') ?></a>
+
+                                            <ul class="dropdown-menu shadow mt-1">
+                                                <li><a class="dropdown-item" href="<?php echo base_url('register-client') ?>"><?php echo trans('register-client') ?></a></li>
+                                                <li><a class="dropdown-item" href="<?php echo base_url('register-specialist') ?>"><?php echo trans('register-beauty-specialist') ?></a></li>
+                                            </ul>
+                                        </li>
                                     <?php endif ?>
                                 </li>
                             </ul>

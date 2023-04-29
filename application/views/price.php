@@ -73,7 +73,7 @@
                       </div>
                     <!-- Button -->
                     <input type="hidden" name="billing_type" value="monthly" class="billing_type">
-                    <a class="btn btn-light-primary btn-block package_btn" href="<?php echo base_url('register?plan='.$package->slug) ?>"><?php echo trans('select-plan') ?></a>
+                    <a class="btn btn-light-primary btn-block package_btn" href="<?php echo base_url('register-specialist?plan='.$package->slug) ?>"><?php echo trans('select-plan') ?></a>
                 </div>
               </div>
             <?php $i++; endforeach ?>

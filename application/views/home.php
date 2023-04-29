@@ -10,7 +10,7 @@
                     <p data-aos="fade-left" data-aos-delay="250" class="text-muted fs-15 mt-3 mb-3 <?php if(text_dir() == 'rtl'){echo "pl-15";}else{echo "pr-15";} ?>"><?php echo html_escape(settings()->description) ?></p>
                     
                     <?php if (settings()->trial_days != 0): ?>
-                        <a href="<?php echo base_url('register?trial=start') ?>" class="btn btn-primary mt-3 btn-pill fs-14" data-aos="fade-left" data-aos-delay="350"><?php echo trans('start') ?> <?php echo settings()->trial_days; ?> <?php echo trans('days-trial') ?></a>
+                        <a href="<?php echo base_url('register-specialist?trial=start') ?>" class="btn btn-primary mt-3 btn-pill fs-14" data-aos="fade-left" data-aos-delay="350"><?php echo trans('start') ?> <?php echo settings()->trial_days; ?> <?php echo trans('days-trial') ?></a>
                     <?php endif ?>
                 </div>
 
@@ -217,7 +217,7 @@
             <div class="text-center  pb-5 pt-5">
                 <h3 class="h1 mb-2 mt-0 text-primary font-weight-bold custom-fonts" data-aos="fade-up" data-aos-delay="100"><?php echo trans('start-using') ?> <?php echo html_escape(settings()->site_name) ?> <?php echo trans('account') ?></h3>
                 <p class="text-dark" data-aos="fade-up" data-aos-delay="200"><?php echo trans('sign-up-for-our-14-day-trial-with-all-features') ?>.</p>
-                <a href="<?php echo base_url('register?trial=start') ?>" class="badge badge-primary badge-pill py-3" data-aos="fade-up" data-aos-delay="300"><?php echo trans('get-started') ?> <i class="fas fa-long-arrow-alt-right"></i></a>
+                <a href="<?php echo base_url('register-specialist?trial=start') ?>" class="badge badge-primary badge-pill py-3" data-aos="fade-up" data-aos-delay="300"><?php echo trans('get-started') ?> <i class="fas fa-long-arrow-alt-right"></i></a>
             </div>
             </div>
         </div>

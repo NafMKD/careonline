@@ -188,3 +188,48 @@
     </script>
 <?php endif; ?>
 
+<?php if(isset($page_title) && $page_title == 'Register'): ?>
+<script>
+    var msg_processing = $('.msg_processing').val();
+    var msg_registared_successfully = $('.msg_registared_successfully').val();
+    var msg_preparing_environment = $('.msg_preparing_environment').val();
+    var msg_email_exist = $('.msg_email_exist').val();
+    var msg_recaptcha_is_required = $('.msg_recaptcha_is_required').val();
+
+    $(document).on('submit', "#beauty_staff_register_form", function() {
+        $(".register_button").html('<span class="spinner-border spinner-border-sm"></span> &nbsp; '+msg_processing);
+        $(".register_button").prop('disabled', true);
+        $.post($('#beauty_staff_register_form').attr('action'), $('#beauty_staff_register_form').serialize(), function(json){
+            if (json.st == 1) {
+                
+                $('html, body').animate({ scrollTop: 25 }, 'slow');
+                $(".error").hide();
+                $(".success").html(`<i class="fa fa-check-circle"></i> `+msg_registared_successfully+` <br> 
+                    <span class="spinner-border spinner-border-sm"></span> `+msg_preparing_environment);
+            
+                setTimeout(function() {
+                window.location.href = json.url;
+                }, 3500);
+
+            }else if (json.st == 2) {
+                $(".register_button").prop('disabled', false);
+                $(".register_button").html('Register');
+                $(".error").html('<i class="icon-exclamation"></i> '+msg_email_exist);
+                $('html, body').animate({ scrollTop: 25 }, 'slow');
+            }else if (json.st == 3) {
+                $(".register_button").prop('disabled', false);
+                $(".register_button").html('Register');
+                $(".error").html('<i class="icon-exclamation"></i> '+msg_recaptcha_is_required);
+                $('html, body').animate({ scrollTop: 25 }, 'slow');
+            }else {
+                $(".register_button").prop('disabled', false);
+                $(".register_button").html('Register');
+                $(".error").html('<i class="icon-exclamation"></i> '+json.msg);
+                $('html, body').animate({ scrollTop: 25 }, 'slow');
+            }
+        },'json');
+        return false;
+    });
+</script>
+<?php endif; ?>
+

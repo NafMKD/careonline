@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="text-center text-small mt-4">
-                        <span><?php echo trans('an-account-yet') ?> <a href="<?php echo base_url('register') ?>"><?php echo trans('register') ?></a></span>
+                        <span><?php echo trans('an-account-yet') ?> <a href="<?php echo base_url('register-specialist') ?>"><?php echo trans('register') ?></a></span>
                     </div>
 
                 </form>
