@@ -500,4 +500,84 @@ class Company extends Home_Controller {
         }
     }
 
+    /** ADDED CODE */
+
+    public function register_client()
+    {
+        /**
+         * 0 -> custom error message
+         * 1 -> success message (with url)
+         * 2 -> error message with email already exists message
+         * 3 -> error message with Recaptcha is required message
+         * else -> custom error message
+         */
+        if($_POST) { 
+            //validate inputs
+            $this->form_validation->set_rules('name', trans('name'), 'required|max_length[100]');
+            $this->form_validation->set_rules('email', trans('email'), 'required|valid_email');
+            $this->form_validation->set_rules('phone', trans('phone'), 'required|min_length[8]|numeric');
+            $this->form_validation->set_rules('new_password', trans('password'), 'required|min_length[6]');
+
+            
+            if ($this->form_validation->run() === false) {
+                $validation = str_replace(['<p>', '</p>', "\n"],['','','<br/>'],validation_errors());
+                echo json_encode(array('st'=>0,'msg'=>$validation));
+                exit;
+            } else {
+
+                $mail =  strtolower(trim($this->input->post('email', true)));
+                $phone = '+'.$this->input->post('carrierCode', true).''.$this->input->post('phone', true);
+                $password = hash_password($this->input->post('new_password'));
+                
+                $data=array(
+                    'user_id' => null,
+                    'business_id' => null,
+                    'name' => $this->input->post('name', true),
+                    'email' => $mail,
+                    'phone' => $phone,
+                    'status' => 1,
+                    'image' => 'assets/images/no-photo.png',
+                    'thumb' => 'assets/images/no-photo-sm.png',
+                    'password' => $password,
+                    'created_at' => my_date_now(),
+                );
+
+                $data = $this->security->xss_clean($data);
+
+                $check_phone = $this->auth_model->check_customer_phone($phone);
+                $check_email = $this->auth_model->check_duplicate_email($mail);
+
+                if ($check_phone){
+                    $msg = trans('phone-exist');
+                    echo json_encode(array('st'=>0, 'msg' => $msg));
+                    exit();
+                } 
+
+                if ($check_email){
+                    $msg = trans('email-exist');
+                    echo json_encode(array('st'=>0, 'msg' => $msg));
+                    exit();
+                } 
+
+            
+                $customer_id = $this->admin_model->insert($data, 'customers');
+                
+                $user_data = array(
+                    'id' => $customer_id,
+                    'name' => $data['name'],
+                    'role' => 'customer',
+                    'thumb' =>$data['thumb'],
+                    'email' => $data['email'],
+                    'logged_in' => true
+                );
+                $this->session->set_userdata($user_data);
+
+                $url = base_url('customer/appointments');
+
+                echo json_encode(array('st'=>1,'url'=>$url));
+                exit;
+            }
+        }
+    }
+
 }

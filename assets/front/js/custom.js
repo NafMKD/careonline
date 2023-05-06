@@ -599,7 +599,9 @@
 
         $(".register_button").html('<span class="spinner-border spinner-border-sm"></span> &nbsp; '+msg_processing);
         $(".register_button").prop('disabled', true);
+        console.log('hete');
         $.post($('#register_form').attr('action'), $('#register_form').serialize(), function(json){
+            console.log('there',json);
             if (json.st == 1) {
                 
                 $('html, body').animate({ scrollTop: 25 }, 'slow');
@@ -858,5 +860,14 @@
         e=null; // i.e; if form state change show warning box, else don't show it.
     });
 
+    /** ADDED CODES */
+
+    $("#terms-condition").change(function() {
+        if(this.checked) {
+            $('.register_button').prop('disabled', false);
+        }else {
+            $('.register_button').prop('disabled', true);
+        }
+    });
 
 })(jQuery);

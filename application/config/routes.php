@@ -81,7 +81,8 @@ $route['pay'] = 'home/pays';
 
 //auth routes
 $route['login'] = 'auth/login';
-$route['register'] = 'auth/register';
+$route['register-specialist'] = 'auth/register';
+$route['register-client'] = 'auth/register_client';
 $route['verify-email'] = 'auth/verify';
 $route['setup'] = 'auth/setup';
 

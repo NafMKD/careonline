@@ -39,7 +39,7 @@ class Auth extends Home_Controller
         $data['countries'] = $this->admin_model->select_asc('country');
         $data['categories'] = $this->admin_model->select_by_status('categories');
         $data['dialing_codes'] = $this->common_model->select_asc('dialing_codes');
-        $data['main_content'] = $this->load->view('register', $data, TRUE);
+        $data['main_content'] = $this->load->view('register_specialist', $data, TRUE);
         $this->load->view('index', $data);
     }
 
@@ -221,12 +221,12 @@ class Auth extends Home_Controller
                         echo json_encode(array('st'=>3));
                         exit();
                     } else {
-                        
+                        $company_slug = $this->generate_slug($this->input->post('company_name', true));
                         $code = random_string('numeric', 4);
                         $data=array(
                             'name' => $this->input->post('company_name', true),
-                            'slug' => str_slug($this->input->post('company_slug', true)),
-                            'user_name' => str_slug($this->input->post('company_slug', true)),
+                            'slug' => str_slug($company_slug),
+                            'user_name' => str_slug($company_slug),
                             'email' => $this->input->post('email', true),
                             'phone' => $phone,
                             'thumb' => 'assets/images/no-photo-sm.png',
@@ -263,7 +263,7 @@ class Auth extends Home_Controller
                             'user_id' => $id,
                             'name' => $this->input->post('company_name', true),
                             'email' => $this->input->post('email', true),
-                            'slug' => str_slug($this->input->post('company_slug', true)),
+                            'slug' => str_slug($company_slug),
                             'category' => str_slug($this->input->post('category', true)),
                             'details' => $this->input->post('details', true),
                             'country' => $country->id,
@@ -672,4 +672,45 @@ class Auth extends Home_Controller
         $this->load->view('error_404');
     }
 
+    /** ADDED CODES */
+
+    // generate a unique slug for specialist
+    public function generate_slug($name)
+    {
+        $name = md5($name);
+
+        while(true) {
+            $rand = rand(0, 22);
+            $name = substr($name, $rand, $rand+9);
+    
+            // check is the slug exists
+            $validate = $this->check_username_inner($name);
+            
+            if($validate) break;
+        }
+
+        return $name;
+    }
+
+    // check if the generated slug is already taken
+    public function check_username_inner($value)
+    {   
+        $result = $this->auth_model->check_username($value);
+        if (!empty($result)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // register client page view
+    public function register_client()
+    {
+        $data = array();
+        $data['page_title'] = 'Register';
+        $data['page'] = 'Auth';
+        $data['menu'] = TRUE;
+        $data['main_content'] = $this->load->view('register_client', $data, TRUE);
+        $this->load->view('index', $data);
+    }
 }
