@@ -13,7 +13,11 @@
                 <h1 class="display-5 mb-0 text-light font-weight-bold"><?php echo html_escape($company->name) ?></h1>
                 <h1 class="display-7 mb-4 text-light font-weight-bold"><?php echo html_escape($company->title) ?></p></h1>
                 <?php if(!empty($services)): ?>
-                    <a href="<?php echo base_url('booking/'.$company->slug) ?>" class="btn btn-primary btn-md mt-4 rounded-pill "><i class="fas fa-calendar-alt"></i> <?php echo trans('book-now') ?></a>
+                    <?php if(is_customer()): ?>
+                        <a href="<?php echo base_url('booking/'.$company->slug) ?>" class="btn btn-primary btn-md mt-4 rounded-pill "><i class="fas fa-calendar-alt"></i> <?php echo trans('book-now') ?></a>
+                    <?php else: ?>
+                        <a href="<?php echo base_url('register-client') ?>" class="btn btn-primary btn-md mt-4 rounded-pill "><i class="fas fa-calendar-alt"></i> <?php echo trans('book-now') ?></a>
+                    <?php endif ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -80,6 +84,7 @@
             </div>
 
             <div class="col-lg-6 col-md-12">
+                <?php if(is_customer() || is_user() || is_admin()):?>
                 <div class="pl-0 pl-lg-5">
                     <h4 class="h5 mb-4"><?php echo trans('business-days') ?></h4>
 
@@ -127,6 +132,11 @@
                     </ul>
 
                 </div>
+                <?php else: ?>
+                    <center><div class="banner-img" data-aos="zoom-in">
+                        <img src="<?php echo base_url(settings()->hero_img) ?>" style="max-height: 250px;" class="text-right" alt="Hero Image">
+                    </div></center>
+                <?php endif ?>
             </div>
         </div>
     </div>

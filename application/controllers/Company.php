@@ -113,6 +113,10 @@ class Company extends Home_Controller {
 
     public function booking($slug)
     {   
+        // check if the customer is logged in
+        if(! is_customer()){
+            redirect(base_url($slug));
+        }
         $data = array();
         $data['slug'] = $slug;
         $data['menu'] = FALSE;
@@ -300,7 +304,13 @@ class Company extends Home_Controller {
     }
 
     //book_appointment
-    public function book_appointment($slug)
+    /**
+     * old book appointment 
+     *
+     * @param [type] $slug
+     * @return void
+     */
+    public function book_appointment_old($slug)
     {   
         $company = $this->common_model->get_by_slug($slug, 'business');
         $id = $company->user_id;
@@ -576,6 +586,120 @@ class Company extends Home_Controller {
 
                 echo json_encode(array('st'=>1,'url'=>$url));
                 exit;
+            }
+        }
+    }
+
+    /**
+     * book appointment for registered users only 
+     *
+     * @param [type] $slug
+     * @return void
+     */
+    public function book_appointment($slug)
+    {   
+        if(! is_customer()){
+            $msg = 'You have to be client to be able to book appointment.';
+            echo json_encode(array('st'=>2, 'msg' => $msg)); exit();
+        }
+
+        $company = $this->common_model->get_by_slug($slug, 'business');
+        $id = $company->user_id;
+        $user = $this->common_model->get_by_id($id, 'users');
+        $date = $this->input->post('date');
+        $date = date("Y-m-d", strtotime($date));
+
+        if ($_POST) {
+
+            //check reCAPTCHA
+            if (!$this->recaptcha_verify_request()) {
+                $msg = trans('recaptcha-is-required');
+                echo json_encode(array('st'=> 4, 'msg' => $msg)); exit();
+            } else {
+
+                if (date('Y-m-d') > $date) {  
+                    $msg = trans('please-enter-a-valid-date');
+                    echo json_encode(array('st'=>2, 'msg' => $msg)); exit();
+                }
+            
+                $customer_id = $this->session->userdata('id');
+
+                if ($this->input->post('staff_id') == 0) {
+                    $random_staff = $this->common_model->get_random_staffs($company->uid, $this->input->post('service_id'), 'services');
+                    $staff_id = $random_staff->id;
+                } else {
+                    $staff_id = $this->input->post('staff_id');
+                }
+
+                if (empty($this->input->post('location_id'))) {
+                    $location_id = 0;
+                }else{
+                   $location_id = $this->input->post('location_id'); 
+                }
+
+                if (empty($this->input->post('sub_location_id'))) {
+                    $sub_location_id = 0;
+                }else{
+                    $sub_location_id = $this->input->post('sub_location_id'); 
+                }
+
+                if (empty($this->input->post('group_booking'))) {
+                    $group_booking = 0;
+                    $total_person = 0;
+                }else{
+                    $group_booking = $this->input->post('group_booking'); 
+                    $total_person = $this->input->post('total_person'); 
+                }
+                
+
+                $booking_data = array(
+                    'number' => random_string('numeric',5),
+                    'user_id' => $company->user_id,
+                    'business_id' => $company->uid,
+                    'customer_id' => $customer_id,
+                    'service_id' => $this->input->post('service_id', true),
+                    'note' => $this->input->post('note'),
+                    'location_id' => $location_id,
+                    'sub_location_id' => $sub_location_id,
+                    'group_booking' => $group_booking,
+                    'total_person' => $total_person,
+                    'staff_id' => $staff_id,
+                    'date' => $this->input->post('date', true),
+                    'time' => $this->input->post('time', true),
+                    'status' => 0,
+                    'pay_info' => $this->input->post('pay_info', true),
+                    'created_at' => user_date_now($company->time_zone)
+                );
+                $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+
+                if($appointment_id && (int) $this->common_model->get_by_id($customer_id, 'customers')->user_id == 0 ) {
+                    $this->admin_model->edit_option(['user_id' => $company->user_id], $customer_id , 'customers');
+                    $this->session->unset_userdata('user_id');
+                    $this->session->set_userdata('user_id', $company->user_id);
+                }
+
+
+                if ($user->enable_sms_notify == 1) {
+                    //send sms
+                    $this->load->model('sms_model');
+                    $customer = $this->admin_model->get_by_id($customer_id, 'customers');
+                    $service = $this->admin_model->get_by_id($this->input->post('service_id'), 'services');
+                    $message = 'Appointment '.$company->name.' - '.$service->name.' is booked successfully at '.$this->input->post('date').' '.$this->input->post('time');
+                    $response = $this->sms_model->send_user($customer->phone, $message, $user->id);
+                }else{
+                    $customer = $this->admin_model->get_by_id($customer_id, 'customers');
+                    $service = $this->admin_model->get_by_id($this->input->post('service_id'), 'services');
+                    $subject = 'Appointment Confirmation - '.$this->settings->site_name;
+                    $message = 'Appointment '.$company->name.' - '.$service->name.' is booked successfully at '.$this->input->post('date').' '.$this->input->post('time');
+                    $this->email_model->send_email($customer->email, $subject, $message);
+                }
+
+                
+                $url = base_url('company/confirm_booking/'.$slug.'/'.md5($appointment_id));
+                $msg = trans('appointment-booked-successfully');
+
+                echo json_encode(array('st'=>1,'url'=> $url, 'msg' => $msg));
+                    
             }
         }
     }

@@ -59,7 +59,11 @@
                 </div>
 
             </div>
-            <a href="<?php echo base_url('booking/'.$company->slug) ?>" class="btn d-block mt-5 btn-light-secondary"><?php echo trans('book-now') ?></a>
+            <?php if(is_customer()): ?>
+                <a href="<?php echo base_url('booking/'.$company->slug) ?>" class="btn d-block mt-5 btn-light-secondary"><?php echo trans('book-now') ?></a>
+            <?php else: ?>
+                <a href="<?php echo base_url('register-client') ?>" class="btn d-block mt-5 btn-light-secondary"><?php echo trans('book-now') ?></a>
+            <?php endif ?>
         </div>
 
     </div>

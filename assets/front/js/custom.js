@@ -527,7 +527,7 @@
 
 
     $(document).on('submit', "#booking_form", function() {
-      $(".step3_btn").html('<span class="spinner-border spinner-border-sm"></span> &nbsp; '+msg_processing);
+      $(".step2_btn").html('<span class="spinner-border spinner-border-sm"></span> &nbsp; '+msg_processing);
       $(".booking_btn").html('<span class="spinner-border spinner-border-sm"></span> &nbsp; '+msg_processing);
       $(".booking_btn").prop('disabled', true);
       $.post($('#booking_form').attr('action'), $('#booking_form').serialize(), function(json){

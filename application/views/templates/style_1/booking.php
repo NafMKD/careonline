@@ -215,88 +215,8 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-4">
-                                <div class="col-12 d-flex justify-content-between">
-                                    <input type="hidden" class="booking_date" name="date" value="">
-                                    <button type="button" class="btn btn-secondary mr-2 pull-left step2_back_btn"><i class="fas fa-long-arrow-alt-left"></i> <?php echo trans('back') ?> </button>
-                                    <button type="button" class="btn btn-primary step2_btn" disabled><?php echo trans('continue') ?> <i class="fas fa-long-arrow-alt-right"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-
-                        <div class="booking_step_3 dnone">
-                            
-                            <ul class="nav nav-pills mb-3 mb-3 mt-4 justify-content-center" id="pills-tab" role="tablist">
-                                <li class="nav-item mr-2 mb-2">
-                                    <a class="nav-link active click_new" id="one-tab" data-toggle="pill" href="#one" role="tab" aria-controls="One" aria-selected="true"><i class="fas fa-user-plus"></i> <?php echo trans('new-registration') ?></a>
-                                </li>
-                                <li class="nav-item mb-2">
-                                    <a class="nav-link click_old" id="two-tab" data-toggle="pill" href="#two" role="tab" aria-controls="two" aria-selected="false"><i class="fas fa-user-check"></i> <?php echo trans('already-have-account') ?></a>
-                                </li>
-                            </ul>
-
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active mt-6" id="one" role="tabpanel" aria-labelledby="one-tab">
-                                    <div class="row p-0">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><?php echo trans('name') ?></label>
-                                                <input type="text" class="form-control" name="name" placeholder="<?php echo trans('your-full-name') ?>">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="exampleFormControlSelect1"><?php echo trans('phone') ?> <span class="text-danger">*</span></label>
-                                                        <div class="input-phone"></div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><?php echo trans('email') ?></label>
-                                                <input type="text" class="form-control" name="email" placeholder="<?php echo trans('your-email-address') ?>">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group mb-5">
-                                                <label><?php echo trans('password') ?> <span class="text-danger">*</span></label>
-                                                <input type="password" class="form-control" name="new_password" placeholder="<?php echo trans('your-password') ?>">
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-
-                                <div class="tab-pane fade show mt-6" id="two" role="tabpanel" aria-labelledby="two-tab">
-                                    <div class="row p-0">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><?php echo trans('phone') ?> / <?php echo trans('email') ?></label>
-                                                <input type="text" class="form-control" name="user_name" placeholder="<?php echo trans('your-email') ?>">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group mb-5">
-                                                <label><?php echo trans('password') ?></label>
-                                                <input type="password" class="form-control" name="old_password" placeholder="<?php echo trans('your-password') ?>">
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row mt-2">
+                                    <input type="hidden" class="booking_date" name="date" value="">
 
                                     <div class="col-12 mb-4">
                                         <a href="javascript:;" class="fs-15 mb-2 badge badge-secondary-soft badge-pill note_btn"><?php echo trans('any-special-notes') ?></a>
@@ -312,11 +232,9 @@
                                     <!-- csrf token -->
                                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>">
 
-
-                                    <input type="hidden" class="is_customer_exist" name="is_customer_exist" value="0">
                                     <div class="col-12 d-flex justify-content-between">
-                                        <button type="button" class="btn btn-secondary step3_back_btn"><i class="fas fa-long-arrow-alt-left"></i> <?php echo trans('back') ?> </button>
-                                        <button type="submit" class="btn btn-primary step3_btn"><?php echo trans('continue') ?> <i class="fas fa-long-arrow-alt-right"></i></button>
+                                        <button type="button" class="btn btn-secondary step2_back_btn"><i class="fas fa-long-arrow-alt-left"></i> <?php echo trans('back') ?> </button>
+                                        <button type="submit" class="btn btn-primary step2_btn"><?php echo trans('continue') ?> <i class="fas fa-long-arrow-alt-right"></i></button>
                                     </div>
                                 </div>
                             </div>
